@@ -4,20 +4,28 @@ from matrix import *
 
 def add_circle( points, cx, cy, cz, r, step ):
     p = 0
+    x0 = cx + r
+    y0 = cy
     while(p <= 1 + step):
-        x = r * math.cos(p * 2 * math.pi) + cx
-        y = r * math.sin(p * 2 * math.pi) + cy
-        add_point(points, x, y, 0)
+        x1 = r * math.cos(p * 2 * math.pi) + cx
+        y1 = r * math.sin(p * 2 * math.pi) + cy
+        add_edge(points, x0, y0, 0, x1, y1, 0)
+        x0 = x1
+        y0 = y1
         p += step
 
 def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
     t = 0
+    x = x0
+    y = y0
     while(t <= 1 + step):
         x_coefs = generate_curve_coefs(x0, x1, x2, x3, curve_type)
         y_coefs = generate_curve_coefs(y0, y1, y2, y3, curve_type)
-        x = x_coefs[0][0]*(t**3) + x_coefs[0][1]*(t**2) + x_coefs[0][2]*t + x_coefs[0][3]
-        y = y_coefs[0][0]*(t**3) + y_coefs[0][1]*(t**2) + y_coefs[0][2]*t + y_coefs[0][3]
-        add_point(points, x, y, 0)
+        next_x = x_coefs[0][0]*(t**3) + x_coefs[0][1]*(t**2) + x_coefs[0][2]*t + x_coefs[0][3]
+        next_y = y_coefs[0][0]*(t**3) + y_coefs[0][1]*(t**2) + y_coefs[0][2]*t + y_coefs[0][3]
+        add_edge(points, x, y, 0, next_x, next_y, 0)
+        x = next_x
+        y = next_y
         t += step
 
 
